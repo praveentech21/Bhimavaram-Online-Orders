@@ -96,8 +96,8 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders`");
                     <tr>
                       <th>Seller</th>
                       <th>Total Margine</th>
-                      <th>Average Margin</th>
                       <th>Total Orders</th>
+                      <th>Average Margin</th>
                     </tr>
                   </thead>
                   <tbody class="table-border-bottom-0">
@@ -119,7 +119,7 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders`");
                       </td>
                       <td><?php echo $month_total_margin; ?></td>
                       <td><?php echo $month_total_orders; ?></td>
-                      <td><?php echo $month_average_margin; ?></td>
+                      <td><?php echo (int)$month_average_margin; ?></td>
                     </tr>
                     <?php
                     }
@@ -156,7 +156,7 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders`");
                 <a href="https://srkrec.edu.in/spellbee/" class="footer-link me-4" target="_blank">SRKR SpellBee</a>
                 <a href="http://saipraveen.free.nf/lunchbox/" target="_blank" class="footer-link me-4">Lunch Box</a>
 
-                <a href="http://srkrcampusonline.rf.gd" target="_blank" class="footer-link me-4">CampuOnlie</a>
+                <a href="http://srkrcampusonline.rf.gd" target="_blank" class="footer-link me-4">CampuOnline</a>
 
 
               </div>
