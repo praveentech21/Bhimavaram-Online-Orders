@@ -1,7 +1,7 @@
 <?php
 
 include 'connect.php';
-$months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` where `year` = '2023'");
+$years_till_now = mysqli_query($conn, "SELECT DISTINCT `year` FROM `orders`");
 ?>
 
 <!DOCTYPE html>
@@ -52,46 +52,40 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` wher
           <!-- Content -->
 
           <div class="container-xxl flex-grow-1 container-p-y">
-            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Bhimavaram Online/</span>
-              Monthly Margines</h4>
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Bhimavaram Online/</span> Seller Margines</h4>
 
-
-            <!-- Basic Bootstrap Table -->
             <?php
 
-            while ($month = mysqli_fetch_assoc($months_till_now)) {
-              $isthismonth = $month['month'];
-              $total_margin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(margin) as total_margin FROM `orders` WHERE month = '$isthismonth' AND `year` = '2023'"))['total_margin'];
+            while ($years = mysqli_fetch_assoc($years_till_now)) {
+              $thisyear = $years['year'];
+              $thisyear_total_margin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(margin) as total_margin FROM `orders` WHERE `year` = '$thisyear'"))['total_margin'];
 
-              $total_orders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total_orders FROM `orders` WHERE month = '$isthismonth' AND `year` = '2023'"))['total_orders'];
+              $thisyear_total_orders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total_orders FROM `orders` WHERE `year` = '$thisyear'"))['total_orders'];
 
-              $average_margin = $total_margin / $total_orders;
+              $thisyear_average_margin = $thisyear_total_margin / $thisyear_total_orders;
             ?>
 
               <div class="card">
-                <h5 class="card-header"><?php echo $isthismonth; ?> Month</h5>
-                <p>&emsp;&emsp;<span>Total Margin : <?php echo $total_margin; ?></span>&emsp;<span>Total
-                    Orders : <?php echo $total_orders; ?></span>&emsp;<span>Average Margin :
-                    <?php echo (int)$average_margin; ?></span> </p>
+                <h5 class="card-header"><?php echo $thisyear; ?> </h5>
                 <div class="table-responsive text-nowrap">
-                  <table class="table" id="<?php echo $isthismonth ?>">
+                  <table class="table" id="myTable_<?php echo $thisyear ?>">
                     <thead>
                       <tr>
-                        <th onclick="sortTable(0,'<?php echo $isthismonth ?>')">Seller</th>
-                        <th onclick="sortTable(1,'<?php echo $isthismonth ?>')">Total Margine</th>
-                        <th onclick="sortTable(2,'<?php echo $isthismonth ?>')">Total Orders</th>
-                        <th onclick="sortTable(3,'<?php echo $isthismonth ?>')">Average Margin</th>
-                      </tr>
+                        <th onclick="sortTable(0,'myTable_<?php echo $thisyear ?>')">Seller</th>
+                        <th onclick="sortTable(1,'myTable_<?php echo $thisyear ?>')">Total Margin</th>
+                        <th onclick="sortTable(2,'myTable_<?php echo $thisyear ?>')">Total Orders</th>
+                        <th onclick="sortTable(3,'myTable_<?php echo $thisyear ?>')">Average Margin</th>
+                      </tr> 
                     </thead>
                     <tbody class="table-border-bottom-0">
                       <?php
 
-                      $sellers = mysqli_query($conn, "SELECT DISTINCT seller FROM `orders` WHERE month = '$isthismonth' AND `year` = '2023'");
+                      $sellers = mysqli_query($conn, "SELECT DISTINCT seller FROM `orders` WHERE `year` = '$thisyear'");
                       while ($seller = mysqli_fetch_assoc($sellers)) {
                         $seller = $seller['seller'];
-                        $month_total_margin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(margin) as total_margin FROM `orders` WHERE month = '$isthismonth' AND `year` = '2023' AND seller = '$seller'"))['total_margin'];
+                        $month_total_margin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(margin) as total_margin FROM `orders` WHERE `year` = '$thisyear' AND seller = '$seller'"))['total_margin'];
 
-                        $month_total_orders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total_orders FROM `orders` WHERE month = '$isthismonth' AND `year` = '2023' AND seller = '$seller'"))['total_orders'];
+                        $month_total_orders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total_orders FROM `orders` WHERE `year` = '$thisyear' AND seller = '$seller'"))['total_orders'];
 
                         $month_average_margin = $month_total_margin / $month_total_orders;
 
@@ -107,6 +101,14 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` wher
                       <?php
                       }
                       ?>
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                          <strong>Total Margin</strong>
+                        </td>
+                        <td><?php echo $thisyear_total_margin; ?></td>
+                        <td><?php echo $thisyear_total_orders; ?></td>
+                        <td><?php echo (int)$thisyear_average_margin; ?></td>
+                      </tr>
 
                     </tbody>
                   </table>
@@ -119,67 +121,6 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` wher
             <?php
             }
             ?>
-
-            <!-- Over All Table -->
-
-            <div class="card">
-              <h5 class="card-header">2023 Monthly Orders</h5>
-              <div class="table-responsive text-nowrap">
-                <table class="table" id="2023overaall">
-                  <thead>
-                    <tr>
-                      <th onclick="sortTable(0,'2023overaall')">Month</th>
-                      <th onclick="sortTable(1,'2023overaall')">Total Margine</th>
-                      <th onclick="sortTable(2,'2023overaall')">Total Orders</th>
-                      <th onclick="sortTable(3,'2023overaall')">Average Margin</th>
-                    </tr>
-                  </thead>
-                  <tbody class="table-border-bottom-0">
-                    <?php
-                    $total_margin_thisyear = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(margin) as total_margin FROM `orders` WHERE `year` = '2023'"))['total_margin'];
-
-                    $total_orders_thisyear = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total_orders FROM `orders` WHERE `year` = '2023'"))['total_orders'];
-
-                    $average_margin_thisyear = $total_margin_thisyear / $total_orders_thisyear;
-                    $montsrun = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` where `year` = '2023'");
-                    while ($monthly = mysqli_fetch_assoc($montsrun)) {
-                      $everymonth = $monthly['month'];
-                      $thismonth_total_margin = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(margin) as total_margin FROM `orders` WHERE month = '$everymonth' AND `year` = '2023'"))['total_margin'];
-
-                      $thismonth_total_orders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total_orders FROM `orders` WHERE month = '$everymonth' AND `year` = '2023'"))['total_orders'];
-
-                      $thismonth_average_margin = $thismonth_total_margin / $thismonth_total_orders;
-
-                    ?>
-                      <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                          <strong><?php echo $everymonth; ?></strong>
-                        </td>
-                        <td><?php echo $thismonth_total_margin; ?></td>
-                        <td><?php echo $thismonth_total_orders; ?></td>
-                        <td><?php echo (int)$thismonth_average_margin; ?></td>
-                      </tr>
-                    <?php
-                    }
-                    ?>
-                    <tr>
-                      <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                        <strong>This Year</strong>
-                      </td>
-                      <td><?php echo $total_margin_thisyear; ?></td>
-                      <td><?php echo $total_orders_thisyear; ?></td>
-                      <td><?php echo (int)$average_margin_thisyear; ?></td>
-                    </tr>
-
-
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <!--/ Basic Bootstrap Table -->
-
-            <hr class="my-5" />
-
 
             <!--/ Responsive Table -->
           </div>
@@ -194,12 +135,10 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` wher
                   document.write(new Date().getFullYear());
                 </script>
                 , made with ❤️ by
-                <a href="saipraveen.free.nf" target="_blank" class="footer-link fw-bolder">Sai
-                  Praveen</a>
+                <a href="saipraveen.free.nf" target="_blank" class="footer-link fw-bolder">Sai Praveen</a>
               </div>
               <div>
-                <a href="https://srkrec.edu.in/spellbee/" class="footer-link me-4" target="_blank">SRKR
-                  SpellBee</a>
+                <a href="https://srkrec.edu.in/spellbee/" class="footer-link me-4" target="_blank">SRKR SpellBee</a>
                 <a href="http://saipraveen.free.nf/lunchbox/" target="_blank" class="footer-link me-4">Lunch Box</a>
 
                 <a href="http://srkrcampusonline.rf.gd" target="_blank" class="footer-link me-4">CampuOnline</a>
@@ -221,19 +160,6 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` wher
     <div class="layout-overlay layout-menu-toggle"></div>
   </div>
   <!-- / Layout wrapper -->
-
-  <script src="Bhavani/vendor/libs/jquery/jquery.js"></script>
-  <script src="Bhavani/vendor/libs/popper/popper.js"></script>
-  <script src="Bhavani/vendor/js/bootstrap.js"></script>
-  <script src="Bhavani/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-
-  <script src="Bhavani/vendor/js/menu.js"></script>
-  <!-- endbuild -->
-
-  <!-- Vendors JS -->
-
-  <!-- Main JS -->
-  <script src="Bhavani/js/main.js"></script>
   <script>
     function sortTable(n,table) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -291,6 +217,18 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` wher
     }
   </script>
 
+  <script src="Bhavani/vendor/libs/jquery/jquery.js"></script>
+  <script src="Bhavani/vendor/libs/popper/popper.js"></script>
+  <script src="Bhavani/vendor/js/bootstrap.js"></script>
+  <script src="Bhavani/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+  <script src="Bhavani/vendor/js/menu.js"></script>
+  <!-- endbuild -->
+
+  <!-- Vendors JS -->
+
+  <!-- Main JS -->
+  <script src="Bhavani/js/main.js"></script>
 
   <!-- Page JS -->
 

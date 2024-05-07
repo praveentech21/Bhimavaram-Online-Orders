@@ -1,6 +1,6 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "bvrmol");
+include 'connect.php';
 $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` where `year` = '2024'");
 $montsrun = $months_till_now;
 ?>
@@ -60,13 +60,13 @@ $montsrun = $months_till_now;
             <div class="card">
               <h5 class="card-header">2024 Monthly Orders</h5>
               <div class="table-responsive text-nowrap">
-                <table class="table">
+                <table class="table" id="monthwise">
                   <thead>
                     <tr>
-                      <th>Month</th>
-                      <th>Total Margine</th>
-                      <th>Total Orders</th>
-                      <th>Average Margin</th>
+                      <th onclick="sortTable(0,'monthwise')">Month</th>
+                      <th onclick="sortTable(1,'monthwise')">Total Margine</th>
+                      <th onclick="sortTable(2,'monthwise')">Total Orders</th>
+                      <th onclick="sortTable(3,'monthwise')">Average Margin</th>
                     </tr>
                   </thead>
                   <tbody class="table-border-bottom-0">
@@ -167,6 +167,64 @@ $montsrun = $months_till_now;
 
   <!-- Main JS -->
   <script src="Bhavani/js/main.js"></script>
+
+  <script>
+    function sortTable(n,table) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById(table);
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "asc";
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "asc") {
+            if (Number(x.innerHTML) > Number(y.innerHTML)) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (Number(x.innerHTML) < Number(y.innerHTML)) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase switchcount by 1:
+          switchcount++;
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+  </script>
+
 
   <!-- Page JS -->
 

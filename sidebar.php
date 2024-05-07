@@ -27,6 +27,12 @@
               <div data-i18n="Analytics">Last Year</div>
             </a>
           </li>
+          <li class="menu-item">
+            <a href="seller.php" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <div data-i18n="Analytics">Seller</div>
+            </a>
+          </li>
           <!-- / Dashboard -->
         </ul>
       </aside>
