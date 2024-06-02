@@ -135,12 +135,11 @@ $years_till_now = mysqli_query($conn, "SELECT DISTINCT `year` FROM `orders`");
                   document.write(new Date().getFullYear());
                 </script>
                 , made with ❤️ by
-                <a href="saipraveen.free.nf" target="_blank" class="footer-link fw-bolder">Sai Praveen</a>
+                <a href="http://saipraveen.free.nf" target="_blank" class="footer-link fw-bolder">Sai Praveen</a>
               </div>
               <div>
                 <a href="https://srkrec.edu.in/spellbee/" class="footer-link me-4" target="_blank">SRKR SpellBee</a>
                 <a href="http://saipraveen.free.nf/lunchbox/" target="_blank" class="footer-link me-4">Lunch Box</a>
-
                 <a href="http://srkrcampusonline.rf.gd" target="_blank" class="footer-link me-4">CampuOnline</a>
 
 

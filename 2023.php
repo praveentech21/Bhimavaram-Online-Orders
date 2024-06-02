@@ -194,7 +194,7 @@ $months_till_now = mysqli_query($conn, "SELECT DISTINCT month FROM `orders` wher
                   document.write(new Date().getFullYear());
                 </script>
                 , made with ❤️ by
-                <a href="saipraveen.free.nf" target="_blank" class="footer-link fw-bolder">Sai
+                <a href="http://saipraveen.free.nf" target="_blank" class="footer-link fw-bolder">Sai
                   Praveen</a>
               </div>
               <div>
